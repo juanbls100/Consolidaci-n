@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CFN Coacalco - Consolidación</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+
+    <div class="bg-white p-8 rounded-2xl shadow-lg w-full max-w-lg">
+        <header class="text-center mb-6">
+            <h1 class="text-4xl font-bold text-gray-800">CFN Coacalco</h1>
+            <h2 class="text-xl text-gray-600 mt-2">Consolidación</h2>
+        </header>
+
+        <div id="main-menu" class="flex flex-col space-y-4 mb-6">
+            <button id="start-capture-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-xl transition duration-300 transform hover:scale-105 shadow-md">
+                Iniciar captura
+            </button>
+        </div>
+
+        <div id="capture-type-menu" class="hidden flex flex-col space-y-4 mb-6">
+            <button id="new-capture-btn" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-6 rounded-xl transition duration-300 transform hover:scale-105 shadow-md">
+                Captura nueva
+            </button>
+            <button id="follow-up-capture-btn" class="bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-3 px-6 rounded-xl transition duration-300 transform hover:scale-105 shadow-md">
+                Captura de seguimiento
+            </button>
+        </div>
+        
+        <form id="new-capture-form" class="space-y-4 hidden">
+            <h3 class="text-2xl font-semibold text-gray-700 mb-4">Captura Nueva</h3>
+            <div class="space-y-2">
+                <label for="nombre" class="block font-medium">Nombre Completo</label>
+                <input type="text" id="nombre" name="nombre" class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+            </div>
+            <div class="space-y-2">
+                <label for="correo" class="block font-medium">Correo Electrónico</label>
+                <input type="email" id="correo" name="correo" class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+            </div>
+            <div class="space-y-2">
+                <label for="telefono" class="block font-medium">Teléfono</label>
+                <input type="tel" id="telefono" name="telefono" class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+            </div>
+            <div class="space-y-2">
+                <label for="bautizado" class="block font-medium">¿Ya fue bautizado?</label>
+                <select id="bautizado" name="bautizado" class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <option value="" disabled selected>Selecciona una opción</option>
+                    <option value="Sí">Sí</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+            <div class="space-y-2">
+                <label for="maestro-select" class="block font-medium">Asignación de maestro</label>
+                <select id="maestro-select" name="maestro" class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500" disabled>
+                    <option value="" disabled selected>Cargando maestros...</option>
+                </select>
+            </div>
+            <div class="space-y-2">
+                <label for="foto" class="block font-medium">Subir foto</label>
+                <input type="file" id="foto" name="foto" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100"/>
+                <p class="text-sm text-gray-500">Nota: La funcionalidad de subida de fotos no está incluida en esta versión del script de Apps Script.</p>
+            </div>
+            
+            <button type="submit" id="new-capture-submit-btn" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-6 rounded-xl transition duration-300 transform hover:scale-105 shadow-md">
+                Guardar Captura Nueva
+            </button>
+        </form>
+
+        <form id="follow-up-form" class="space-y-4 hidden">
+            <h3 class="text-2xl font-semibold text-gray-700 mb-4">Captura de Seguimiento</h3>
+            <div class="space-y-2">
+                <label for="congregante-select" class="block font-medium">Congregante</label>
+                <select id="congregante-select" name="congregante" class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500" disabled>
+                    <option value="" disabled selected>Cargando congregantes...</option>
+                </select>
+            </div>
+            <div class="space-y-2">
+                <label for="curso-select" class="block font-medium">Curso a tomar</label>
+                <select id="curso-select" name="curso" class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500" disabled>
+                    <option value="" disabled selected>Cargando cursos...</option>
+                </select>
+            </div>
+            <div class="space-y-2">
+                <label for="estatus-curso" class="block font-medium">Estatus del curso</label>
+                <select id="estatus-curso" name="estatus" class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                    <option value="" disabled selected>Selecciona una opción</option>
+                    <option value="Inscribir">Inscribir</option>
+                    <option value="Curso finalizado">Curso finalizado</option>
+                </select>
+            </div>
+            <button type="submit" id="follow-up-submit-btn" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-3 px-6 rounded-xl transition duration-300 transform hover:scale-105 shadow-md">
+                Guardar Captura de Seguimiento
+            </button>
+        </form>
+
+        <div id="message-area" class="mt-6 text-center text-sm font-medium"></div>
+    </div>
+
+    <script>
+        // ¡IMPORTANTE! Reemplaza esta URL con la URL de tu Web App desplegada.
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzQbY5QIQsQt2JQn2yURBFepnff43Ec_Pz6Wmr002pOJ3r3nmu1_OlkkbdErLETVwzQ/exec';
+
+        const messageArea = document.getElementById('message-area');
+        const startCaptureBtn = document.getElementById('start-capture-btn');
+        const captureTypeMenu = document.getElementById('capture-type-menu');
+        const newCaptureBtn = document.getElementById('new-capture-btn');
+        const followUpCaptureBtn = document.getElementById('follow-up-capture-btn');
+        const newCaptureForm = document.getElementById('new-capture-form');
+        const followUpForm = document.getElementById('follow-up-form');
+        
+        const maestroSelect = document.getElementById('maestro-select');
+        const congreganteSelect = document.getElementById('congregante-select');
+        const cursoSelect = document.getElementById('curso-select');
+
+        // Función para mostrar mensajes al usuario
+        function showMessage(msg, type = 'info') {
+            let color;
+            if (type === 'success') {
+                color = 'text-green-600';
+            } else if (type === 'error') {
+                color = 'text-red-600';
+            } else {
+                color = 'text-gray-500';
+            }
+            messageArea.innerHTML = `<p class="${color}">${msg}</p>`;
+        }
+
+        // Función para poblar un select con datos
+        function populateSelect(selectElement, data, defaultOptionText) {
+            selectElement.innerHTML = `<option value="" disabled selected>${defaultOptionText}</option>`;
+            data.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item;
+                option.textContent = item;
+                selectElement.appendChild(option);
+            });
+            selectElement.disabled = false;
+        }
+
+        // Carga inicial de los menús desplegables
+        async function loadDropdownData() {
+            showMessage('Cargando datos de validación...', 'info');
+            try {
+                const url = `${SCRIPT_URL}?action=getValidationData`;
+                const response = await fetch(url);
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    const { congregantes, cursos, maestros } = result.data;
+                    populateSelect(maestroSelect, maestros, 'Selecciona un maestro');
+                    populateSelect(congreganteSelect, congregantes, 'Selecciona un congregante');
+                    populateSelect(cursoSelect, cursos, 'Selecciona un curso');
+                    showMessage('Datos cargados exitosamente.', 'success');
+                } else {
+                    showMessage(`Error al cargar datos: ${result.message}`, 'error');
+                }
+            } catch (error) {
+                showMessage(`Error de conexión: ${error.message}`, 'error');
+            }
+        }
+        
+        // Manejador de eventos para los botones principales
+        startCaptureBtn.addEventListener('click', () => {
+            document.getElementById('main-menu').classList.add('hidden');
+            captureTypeMenu.classList.remove('hidden');
+        });
+
+        newCaptureBtn.addEventListener('click', () => {
+            captureTypeMenu.classList.add('hidden');
+            newCaptureForm.classList.remove('hidden');
+        });
+
+        followUpCaptureBtn.addEventListener('click', () => {
+            captureTypeMenu.classList.add('hidden');
+            followUpForm.classList.remove('hidden');
+        });
+
+        // Manejador del formulario de "Captura nueva"
+        newCaptureForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            showMessage('Enviando captura nueva...', 'info');
+            const formData = new FormData(newCaptureForm);
+            const data = Object.fromEntries(formData.entries());
+            data.action = 'submitNewCapture'; // Acción para el script de GAS
+
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    showMessage('Captura nueva guardada exitosamente. ¡Gracias!', 'success');
+                    newCaptureForm.reset();
+                } else {
+                    showMessage(`Error al guardar: ${result.message}`, 'error');
+                }
+            } catch (error) {
+                showMessage(`Error de conexión: ${error.message}`, 'error');
+            }
+        });
+
+        // Manejador del formulario de "Captura de seguimiento"
+        followUpForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            showMessage('Enviando captura de seguimiento...', 'info');
+            const formData = new FormData(followUpForm);
+            const data = Object.fromEntries(formData.entries());
+            data.action = 'submitFollowUpCapture'; // Acción para el script de GAS
+
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    showMessage('Captura de seguimiento guardada exitosamente. ¡Gracias!', 'success');
+                    followUpForm.reset();
+                } else {
+                    showMessage(`Error al guardar: ${result.message}`, 'error');
+                }
+            } catch (error) {
+                showMessage(`Error de conexión: ${error.message}`, 'error');
+            }
+        });
+
+        // Cargar los datos de los menús al iniciar la página
+        window.addEventListener('DOMContentLoaded', loadDropdownData);
+    </script>
+</body>
+</html>
